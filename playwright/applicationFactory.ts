@@ -13,6 +13,7 @@ const sourcePathsToCopy: string[] = [
   "tsconfig.json",
   "tailwind.config.ts",
   "postcss.config.mjs",
+  "next-env.d.ts",
 ]
 
 /**
@@ -107,38 +108,6 @@ export const applicationFactory = () => {
   let _targetDirectory: string
 
   const builder = {
-    clone: async ({ outputDir }: { outputDir: string }) => {
-      const currentTargetDir = _targetDirectory
-      _targetDirectory = path.join(rootPath, outputDir)
-
-      await fs.remove(_targetDirectory)
-      await fs.ensureDir(_targetDirectory)
-      await fs.copy(currentTargetDir, _targetDirectory)
-
-      return builder
-    },
-    editFile: (file: string) => {
-      const replacePartialContent = async (
-        searchValue: RegExp | string,
-        replaceValue: string,
-      ) => {
-        const filePath = path.join(_targetDirectory, file)
-        const fileContent = await fs.readFile(filePath, "utf-8")
-        const newContent = fileContent.replace(searchValue, replaceValue)
-
-        await fs.writeFile(filePath, newContent)
-      }
-
-      const replaceContent = async (content: string) => {
-        const filePath = path.join(_targetDirectory, file)
-        await fs.writeFile(filePath, content)
-      }
-
-      return {
-        replacePartialContent,
-        replaceContent,
-      }
-    },
     build: async () => {
       console.log()
       console.log("Running `npm run build` ...")
