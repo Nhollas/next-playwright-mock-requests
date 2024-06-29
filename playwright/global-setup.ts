@@ -8,19 +8,6 @@ const globalSetup = async (): Promise<void> => {
     outputDir: "playwright/builds/mocked",
   })
 
-  await clonedAppWithMockedDependencies
-    .editFile("src/components/PaymentProvider.tsx")
-    .replacePartialContent(
-      'import("./Braintree")',
-      'import("./MockedBraintree")',
-    )
-
-  await clonedAppWithMockedDependencies
-    .editFile("src/lib/braintree.ts")
-    .replaceContent(
-      `export async function getClientToken() { return "mockClientToken" }`,
-    )
-
   if (baseApplication.isCurrentBuildOutdated) {
     await clonedAppWithMockedDependencies.build()
   } else {

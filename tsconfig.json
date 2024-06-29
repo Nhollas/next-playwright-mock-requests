@@ -16,7 +16,6 @@
     "allowImportingTsExtensions": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["vitest/globals"],
     "plugins": [
       {
         "name": "next"
@@ -26,14 +25,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "vitest.setup.mts",
-    "vitest.config.mts"
-  ],
-  "exclude": ["node_modules"],
-  "files": ["vitest.setup.mts"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

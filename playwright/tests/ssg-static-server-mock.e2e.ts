@@ -1,0 +1,32 @@
+import { HttpResponse, http } from "msw"
+import test from "../fixtures/next-fixture"
+import { expect } from "@playwright/test"
+import { exampleGenerator } from "test/data-generators"
+import { buildServiceUrl } from "playwright/utils"
+import { env } from "@/lib/env"
+
+test("We can mock static server requests that are made on build time.", async ({
+  page,
+  serverRequestInterceptor,
+  revalidatePath,
+}) => {
+  const mockExamples = Array.from({ length: 3 }, exampleGenerator)
+
+  serverRequestInterceptor.use(
+    http.get(buildServiceUrl(env.EXAMPLE_SERVICE_URL, "/examples"), () =>
+      HttpResponse.json(mockExamples),
+    ),
+  )
+
+  await revalidatePath(page, "/examples/ssg")
+
+  await page.goto("/examples/ssg")
+
+  for (const example of mockExamples) {
+    await expect(
+      page.getByRole("heading", { name: example.title }),
+    ).toBeVisible()
+
+    await expect(page.getByText(example.description)).toBeVisible()
+  }
+})

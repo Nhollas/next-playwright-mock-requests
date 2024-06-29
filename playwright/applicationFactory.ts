@@ -11,10 +11,8 @@ const sourcePathsToCopy: string[] = [
   ".env.local",
   "src",
   "tsconfig.json",
-  "vitest.config.mts",
   "tailwind.config.ts",
   "postcss.config.mjs",
-  "vitest.setup.mts",
 ]
 
 /**

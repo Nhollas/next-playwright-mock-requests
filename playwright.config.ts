@@ -7,7 +7,6 @@ import dotenv from "dotenv"
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// Alternatively, read from "../my.env" file.
 dotenv.config({ path: path.resolve(__dirname, ".env.local") })
 
 /**
@@ -23,7 +22,6 @@ export default defineConfig({
   testMatch: "**/*.e2e.ts",
   /* Retry on CI only */
   retries: undefined,
-  timeout: 5000,
   /* Opt out of parallel tests on CI. */
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
