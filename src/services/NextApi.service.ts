@@ -20,7 +20,7 @@ const NextApiService = (): INextApiService => ({
 
     const examples = await response.json()
 
-    return examples
+    return examples as Example[]
   },
 })
 
