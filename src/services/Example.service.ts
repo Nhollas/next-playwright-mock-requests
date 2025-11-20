@@ -17,14 +17,14 @@ interface IExampleService {
 
 const ExampleService = (): IExampleService => ({
   async getExamples() {
-    const response = await ExampleClient.fetch("/examples", {
+    const response = await ExampleClient.fetch("/", {
       method: "GET",
       cache: "no-cache",
     })
 
     const examples = await response.json()
 
-    return examples
+    return examples as Example[]
   },
 })
 
