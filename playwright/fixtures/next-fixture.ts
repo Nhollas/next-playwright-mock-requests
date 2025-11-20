@@ -26,7 +26,7 @@ export const test = base.extend<{
   },
   serverRequestInterceptor: [
     async ({}, use) => {
-      server.listen({ onUnhandledRequest: "bypass" })
+      server.listen({ onUnhandledRequest: "warn" })
 
       await use(server)
 

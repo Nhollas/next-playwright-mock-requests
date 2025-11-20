@@ -13,7 +13,7 @@ test("We can mock static server requests that are made on build time.", async ({
   const mockExamples = Array.from({ length: 3 }, exampleGenerator)
 
   serverRequestInterceptor.use(
-    http.get(buildServiceUrl(env.EXAMPLE_SERVICE_URL, "/examples"), () =>
+    http.get(buildServiceUrl(env.EXAMPLE_SERVICE_URL, "/"), () =>
       HttpResponse.json(mockExamples),
     ),
   )

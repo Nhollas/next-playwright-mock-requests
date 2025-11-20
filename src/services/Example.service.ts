@@ -19,7 +19,6 @@ const ExampleService = (): IExampleService => ({
   async getExamples() {
     const response = await ExampleClient.fetch("/", {
       method: "GET",
-      cache: "no-cache",
     })
 
     const examples = await response.json()

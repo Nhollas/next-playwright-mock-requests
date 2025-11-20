@@ -15,7 +15,6 @@ const NextApiService = (): INextApiService => ({
   async getExamples() {
     const response = await NextApiClient.fetch("/examples", {
       method: "GET",
-      cache: "no-cache",
     })
 
     const examples = await response.json()
