@@ -13,8 +13,13 @@ const sourcePathsToCopy: string[] = [
   "tsconfig.json",
   "tailwind.config.ts",
   "postcss.config.mjs",
-  "next-env.d.ts",
 ]
+
+const filesToIgnore: string[] = ["next-env.d.ts"]
+
+const shouldIgnoreFile = (filePath: string): boolean => {
+  return filesToIgnore.some((ignoredFile) => filePath.endsWith(ignoredFile))
+}
 
 /**
  * Recursively gets all file paths from the provided directories.
@@ -87,8 +92,29 @@ export const syncFile = async (
       ])
 
       if (srcContent !== destContent) {
+        // File contents differ, update the destination
         await fs.copy(source, destination)
         console.log(`Updating \`${relativeDestPath}\` as it has changed.`)
+
+        // Log the differences
+        const srcLines = srcContent.split("\n")
+        const destLines = destContent.split("\n")
+        const maxLines = Math.max(srcLines.length, destLines.length)
+
+        console.log("  Differences:")
+        for (let i = 0; i < maxLines; i++) {
+          if (srcLines[i] !== destLines[i]) {
+            console.log(`    Line ${i + 1}:`)
+            if (destLines[i] !== undefined) {
+              console.log(`      - ${destLines[i]}`)
+            }
+            if (srcLines[i] !== undefined) {
+              console.log(`      + ${srcLines[i]}`)
+            }
+          }
+        }
+        console.log("")
+
         return { hasFileChanged: true }
       }
     }
@@ -148,8 +174,12 @@ export const applicationFactory = () => {
         getAllFilePaths([_targetDirectory]),
       ])
 
+      // Filter out ignored files
+      const filteredSrcFilePaths = srcFilePaths.filter((file) => !shouldIgnoreFile(file))
+      const filteredDestFilePaths = destFilePaths.filter((file) => !shouldIgnoreFile(file))
+
       const haveAnyFilesChanged = await Promise.all(
-        srcFilePaths.map(async (file) => {
+        filteredSrcFilePaths.map(async (file) => {
           const srcPath = path.join(rootPath, file)
           const destPath = path.join(_targetDirectory, file)
 
@@ -157,9 +187,9 @@ export const applicationFactory = () => {
         }),
       ).then((results) => results.some((r) => r.hasFileChanged))
 
-      const filesToRemove = destFilePaths.filter(
+      const filesToRemove = filteredDestFilePaths.filter(
         (file) =>
-          !srcFilePaths.includes(file.replace(_targetDirectory + "/", "")),
+          !filteredSrcFilePaths.includes(file.replace(_targetDirectory + "/", "")),
       )
 
       await Promise.all(
