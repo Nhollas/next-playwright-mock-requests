@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:server": "NODE_ENV=test mocky-balboa-next-js",
+    "test:server": "MOCK_SERVER=true mocky-balboa-next-js",
     "test": "playwright test"
   },
   "dependencies": {
