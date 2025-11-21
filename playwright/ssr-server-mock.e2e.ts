@@ -1,23 +1,23 @@
-import { HttpResponse, http } from "msw"
-import test from "../fixtures/next-fixture"
+import test from "@mocky-balboa/playwright/test"
 import { expect } from "@playwright/test"
 import { exampleGenerator } from "test/data-generators"
 import { env } from "@/lib/env"
-import { buildServiceUrl } from "playwright/utils"
 
 test("We can mock server requests that happen before page load.", async ({
   page,
-  serverRequestInterceptor,
+  mocky,
 }) => {
   const mockExamples = Array.from({ length: 3 }, exampleGenerator)
 
-  serverRequestInterceptor.use(
-    http.get(buildServiceUrl(env.EXAMPLE_SERVICE_URL, "/"), () =>
-      HttpResponse.json(mockExamples),
-    ),
+  mocky.route(env.EXAMPLE_SERVICE_URL, (route) =>
+    route.fulfill({
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(mockExamples),
+    }),
   )
 
-  await page.goto("/examples/ssr")
+  await page.goto("http://localhost:3000/examples/ssr")
 
   for (const example of mockExamples) {
     await expect(

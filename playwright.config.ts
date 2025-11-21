@@ -16,7 +16,6 @@ export default defineConfig({
   testDir: "./playwright",
   /* Run tests in files in parallel */
   fullyParallel: true,
-  globalSetup: require.resolve("./playwright/global-setup.ts"),
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   testMatch: "**/*.e2e.ts",
